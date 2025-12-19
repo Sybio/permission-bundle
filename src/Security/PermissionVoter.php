@@ -8,6 +8,7 @@ use Sybio\PermissionBundle\PermissionInterface;
 use Sybio\PermissionBundle\Validation\PermissionValidatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use function get_class;
 
 /**
  * @extends Voter<string,PermissionInterface>
@@ -24,8 +25,11 @@ final class PermissionVoter extends Voter
         string $attribute,
         mixed $subject,
     ): bool {
-        return $attribute === $this->securityAttribute
-            && $subject instanceof PermissionInterface;
+        return $subject instanceof PermissionInterface
+            && (
+                $attribute === $this->securityAttribute
+                || $attribute === get_class($subject)
+            );
     }
 
     /**

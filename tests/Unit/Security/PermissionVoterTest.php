@@ -43,6 +43,16 @@ final class PermissionVoterTest extends TestCase
     }
 
     #[Test]
+    public function it_supports_when_attribute_matches_permission_class_and_subject_is_permission_interface(): void
+    {
+        $permission = $this->createMock(PermissionInterface::class);
+
+        $result = $this->voter->vote($this->token, $permission, [$permission::class]);
+
+        $this->assertSame(1, $result);
+    }
+
+    #[Test]
     public function it_does_not_support_when_attribute_does_not_match(): void
     {
         $permission = $this->createMock(PermissionInterface::class);
