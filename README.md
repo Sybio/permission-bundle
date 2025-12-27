@@ -187,6 +187,51 @@ if ($violations->count() > 0) {
 }
 ```
 
+### Method 3: With Twig Extensions
+
+The bundle provides two Twig functions to check permissions directly in your templates.
+
+#### Function `has_permission()`
+
+This function returns a boolean indicating whether the permission is granted or not.
+
+**Usage**:
+```twig
+{% if has_permission('App\\Security\\Permission\\EditArticlePermission', articleId, userId) %}
+    <button>Edit Article</button>
+{% else %}
+    <p>You are not authorized to edit this article.</p>
+{% endif %}
+```
+
+The function takes:
+- First argument: The fully qualified class name of the permission (as a string)
+- Remaining arguments: The arguments to pass to the permission's constructor
+
+#### Function `permission()`
+
+This function returns a decision object containing both the granted status and the violations list.
+
+**Usage**:
+```twig
+{% set decision = permission('App\\Security\\Permission\\EditArticlePermission', articleId, userId) %}
+
+{% if decision.granted %}
+    <button>Edit Article</button>
+{% else %}
+    <p>Access denied. Reasons:</p>
+    <ul>
+        {% for violation in decision.violations %}
+            <li>{{ violation.message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+```
+
+The returned object has:
+- `granted` (bool): Whether the permission is granted
+- `violations` (ConstraintViolationListInterface): The list of violations if the permission was denied
+
 ## Complete example
 
 Here's a complete example with a (little) more complex permission:

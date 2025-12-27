@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2025-12-27
+
+### Added
+- Twig extension `has_permission()` function to check permissions in templates (returns boolean)
+- Twig extension `permission()` function to get detailed permission decision with violations
+- PermissionDecisionInterface and PermissionDecision to represent permission validation results
+
 ## [1.0.0] - 2025-12-19
 
 ### Added

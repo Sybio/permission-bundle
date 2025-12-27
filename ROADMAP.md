@@ -4,9 +4,8 @@ This document outlines planned features and improvements for the Permission Bund
 
 ## Planned Features
 
-### v1.1.0 (Planned)
+### v1.2.0 (Planned)
 - **PHP Attribute HasPermission** : A PHP 8 attribute to simplify permission checks in controllers
-- **Twig Extension has_permission** : A Twig function to check permissions directly in templates
 
 ## Ideas for Future Versions
 

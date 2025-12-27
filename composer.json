@@ -17,6 +17,7 @@
         "symfony/dependency-injection": "^7.1",
         "symfony/http-kernel": "^7.1",
         "symfony/security-core": "^7.1",
+        "symfony/twig-bundle": "^7.1",
         "symfony/validator": "^7.1"
     },
     "require-dev": {

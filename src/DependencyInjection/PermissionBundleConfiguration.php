@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Sybio\PermissionBundle\DependencyInjection;
 
+use Sybio\PermissionBundle\Decision\PermissionDecisionFactory;
+use Sybio\PermissionBundle\Decision\PermissionDecisionFactoryInterface;
 use Sybio\PermissionBundle\PermissionCheckerInterface;
 use Sybio\PermissionBundle\Security\PermissionVoter;
+use Sybio\PermissionBundle\Twig\HasPermissionTwigFunction;
+use Sybio\PermissionBundle\Twig\PermissionTwigFunction;
 use Sybio\PermissionBundle\Validation\PermissionConstraintValidator;
 use Sybio\PermissionBundle\Validation\PermissionValidator;
 use Sybio\PermissionBundle\Validation\PermissionValidatorInterface;
@@ -70,10 +74,39 @@ class PermissionBundleConfiguration extends Extension implements ConfigurationIn
                 ->addTag('security.voter'),
         );
 
+        /** @see PermissionDecisionFactory */
+        $container->setDefinition(
+            'sybio_permission.result_factory',
+            (new Definition(PermissionDecisionFactory::class))
+                ->setPublic(false),
+        );
+
+        /** @see HasPermissionTwigFunction */
+        $container->setDefinition(
+            'sybio_permission.twig.has_permission',
+            (new Definition(HasPermissionTwigFunction::class))
+                ->setArgument(0, new Reference('security.authorization_checker'))
+                ->setArgument(1, $container->getParameter('sybio_permission.security_attribute'))
+                ->addTag('twig.extension')
+                ->setPublic(false),
+        );
+
+        /** @see PermissionTwigFunction */
+        $container->setDefinition(
+            'sybio_permission.twig.permission',
+            (new Definition(PermissionTwigFunction::class))
+                ->setArgument(0, new Reference('security.authorization_checker'))
+                ->setArgument(1, new Reference('sybio_permission.validator'))
+                ->setArgument(2, new Reference('sybio_permission.result_factory'))
+                ->addTag('twig.extension')
+                ->setPublic(false),
+        );
+
         $container->setAlias(PermissionConstraintValidator::class, 'sybio_permission.constraint_validator');
         $container->setAlias(PermissionValidatorInterface::class, 'sybio_permission.validator');
         $container->setAlias(PermissionValidator::class, 'sybio_permission.validator');
         $container->setAlias(PermissionVoter::class, 'sybio_permission.voter');
+        $container->setAlias(PermissionDecisionFactoryInterface::class, 'sybio_permission.result_factory');
     }
 
     public function getAlias(): string
